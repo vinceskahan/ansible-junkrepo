@@ -1,0 +1,6 @@
+---
+- name: debug_handler
+  debug: msg="consider it handled!"
+
+- name: rm_handler
+  debug: msg="and then removed"
