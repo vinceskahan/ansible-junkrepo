@@ -1,6 +1,6 @@
 ---
 - name: common role items start here
-  debug: msg="hello main role task1"
+  debug: msg="hello common role task1"
 
 - name: set hostname
   hostname: name={{ hostname }}
