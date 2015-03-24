@@ -1,0 +1,10 @@
+---
+- name: main role task1
+  debug: msg="hello main role task1"
+
+
+- name: debug distro
+  debug: msg="Hello Debian-7 distro"
+  when:
+    ansible_distribution == "Debian" and ansible_distribution_major_version == "7"
+
