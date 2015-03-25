@@ -1,5 +1,10 @@
 ---
-- hosts: all
+
+- hosts: zoneminder
+  roles:
+  - console
+
+- hosts: weewx
   roles:
   - apt
   - common

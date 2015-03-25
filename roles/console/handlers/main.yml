@@ -1,6 +1,5 @@
 ---
-- name: debug_handler
-  debug: msg="consider it handled!"
+- name: telinit_q
+  command: "/sbin/telinit q"
 
-- name: rm_handler
-  debug: msg="and then removed"
+
