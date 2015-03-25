@@ -1,0 +1,12 @@
+- name: enable nginx
+  command: update-rc.d nginx defaults
+
+- name: restart nginx
+  command: service nginx restart
+
+- name: enable weewx
+  command: update-rc.d weewx defaults
+
+- name: restart weewx
+  command: service weewx restart
+

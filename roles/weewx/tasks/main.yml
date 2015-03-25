@@ -1,0 +1,86 @@
+     #-- very rarely actually needed
+     #   - name: update apt keys
+     #    command: apt-key update
+
+     #-- update cache takes a long time, do so only daily
+     - name: update apt cache
+       apt: update_cache=yes cache_valid_time=84600
+#     - name: update apt packages
+#       apt: upgrade=yes
+ 
+     - name: install weewx optional prerequisites
+       apt: package={{ item }} state=present
+       with_items:
+          - sqlite3
+          - ftp
+          - rsync
+
+############# 
+
+     - name: install nginx 
+       apt: package={{ item }} state=present
+       with_items:
+          - nginx
+
+     - name: install config file
+       template: src=default.conf dest=/etc/nginx/sites-enabled/default
+       notify: enable nginx
+       notify: restart nginx
+
+############# 
+
+     - name: install weewx mandatory prerequisites
+       apt: package={{ item }} state=present
+       with_items:
+          - python-configobj
+          - python-cheetah
+          - python-imaging
+          - python-serial
+          - python-usb
+          - python-dev
+          - python-pip
+          - sqlite3
+ 
+     ##### this should be refactored as it's common to multiple distros
+     #     other than setting 'location' in the weewx.conf uniquely
+     #
+     - get_url:
+           url="http://sourceforge.net/projects/weewx/files/latest/download?source=files"
+           dest="/tmp/weewx.tgz"
+ 
+     - name: make tmpdir to build in
+       file: dest=/tmp/weewx state=directory
+ 
+      # note the options here, create a version-neutral tree we can script around
+     - name: extract weewx
+       command: tar zxvf /tmp/weewx.tgz -C /tmp/weewx --strip-components=1
+ 
+     - name: build weewx
+       command: chdir=/tmp/weewx ./setup.py build 
+ 
+     - name: install weewx
+       command: chdir=/tmp/weewx ./setup.py install --quiet
+
+### TO DO - the webroot differs based on webserver chosen
+ 
+      # note force=yes since the target doesn't exist until weewx runs for a while
+      # yes the terminology seems a bit backwards to me too
+#     - file: src={{ item.weewx_public_html }} dest={{ item.web_weewx_dir }} state=link force=yes
+       #with_items:
+          #- { weewx_public_html: '/home/weewx/public_html', web_weewx_dir: '/var/www/html/weewx'}
+ 
+      ##### end of refactoring opportunity
+  
+     - name: install startup file
+       command: cp /tmp/weewx/util/init.d/weewx.debian /etc/init.d/weewx
+ 
+     - name: set to start on bootup
+       command: update-rc.d weewx defaults 98
+ 
+     - file: path=/etc/init.d/weewx mode=0755
+ 
+      # hope the init.d file starts late enough for ntp to be up
+     - name: fire it up
+       command: service weewx start
+  
+ 
