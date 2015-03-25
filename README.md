@@ -7,6 +7,11 @@ This expects:
  - weewx as available on sourceforge in tgz format
  - debian as the host operating system
 
+To run:
+ - edit the hosts file to fit your remote ip address
+ - run "ansible-playbook -i hosts site.yml"
+
 Notes:
  - nginx will listen on port 80
  - it takes 5 minutes for weewx to initially provision public_html
+

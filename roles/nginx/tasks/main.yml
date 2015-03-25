@@ -1,0 +1,11 @@
+---
+- name: install nginx 
+  apt: package={{ item }} state=present
+  with_items:
+     - nginx
+
+- name: install config file
+  template: src=default.conf dest=/etc/nginx/sites-enabled/default
+  notify: enable nginx
+  notify: restart nginx
+

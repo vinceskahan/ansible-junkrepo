@@ -1,0 +1,3 @@
+# role 'common'
+
+Things we'll do on all managed systems...

@@ -1,0 +1,17 @@
+---
+
+#-- very rarely needed, if ever
+# - name: update apt keys
+#   command: apt-key update
+
+
+#-- update cache takes a long time, do so only daily
+- name: update apt cache
+  apt: update_cache=yes cache_valid_time=84600
+
+#-- upgrading all packages takes a very long time
+#   (skip that for now)
+#
+#- name: update apt packages
+#  apt: upgrade=yes
+

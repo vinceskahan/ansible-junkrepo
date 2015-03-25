@@ -1,3 +1,0 @@
----
-- name: hostname_handler 
-  debug: msg="the hostname is handled"
