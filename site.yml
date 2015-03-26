@@ -1,5 +1,9 @@
 ---
 
+- hosts: ubuntu
+  roles:
+  - console
+
 - hosts: zoneminder
   roles:
   - console
