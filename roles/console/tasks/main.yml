@@ -1,7 +1,19 @@
-- name: set up serial console
+---
+
+- name: set up serial console (inittab)
   replace: 
      dest:    /etc/inittab
      regexp:  "^#T0:23:respawn:/sbin/getty -L ttyS0 9600 vt100$"
      replace: "T0:23:respawn:/sbin/getty -L ttyS0 115200 vt100"
+  when:
+    ansible_distribution == "Debian" and ansible_distribution_major_version == "7"
   notify:
      - telinit_q
+
+- name: set up serial console (upstart)
+  template: src=ttyS0.conf dest=/etc/init/ttyS0.conf
+  when:
+    ansible_distribution == "Ubuntu" and ansible_distribution_version >= "9.10"
+  notify:
+    start_ttyS0
+

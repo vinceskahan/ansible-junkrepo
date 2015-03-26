@@ -3,6 +3,8 @@
   apt: package={{ item }} state=present
   with_items:
      - nginx
+  when:
+    ansible_os_family == "Debian"
 
 - name: install config file
   template: src=default.conf dest=/etc/nginx/sites-enabled/default

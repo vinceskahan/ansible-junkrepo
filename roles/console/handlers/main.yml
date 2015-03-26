@@ -2,4 +2,7 @@
 - name: telinit_q
   command: "/sbin/telinit q"
 
+- name: start_ttyS0
+  command: "start ttyS0"
+
 

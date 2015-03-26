@@ -8,6 +8,8 @@
 #-- update cache takes a long time, do so only daily
 - name: update apt cache
   apt: update_cache=yes cache_valid_time=84600
+  when:
+    ansible_os_family == "Debian"
 
 #-- upgrading all packages takes a very long time
 #   (skip that for now)

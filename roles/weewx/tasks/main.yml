@@ -2,7 +2,7 @@
 
 #--------------------------
 #
-# todo - make this os-aware
+# todo - support RedHat(ish)
 #
 
 - name: install weewx optional prerequisites
@@ -11,6 +11,8 @@
      - sqlite3
      - ftp
      - rsync
+  when:
+    ansible_os_family == "Debian"
 
 - name: install weewx mandatory prerequisites
   apt: package={{ item }} state=present
@@ -23,11 +25,14 @@
      - python-dev
      - python-pip
      - sqlite3
+  when:
+    ansible_os_family == "Debian"
 
 #------------------------- 
 #
 # common to all
 #
+# todo - do not do this if already done unless a flag is set saying reinstall
 
 - get_url:
       url="http://sourceforge.net/projects/weewx/files/latest/download?source=files"
@@ -51,13 +56,17 @@
 
 #------------------------- 
 #
-# todo - make this os-aware
+# todo - support RedHat(ish)
 #
 
 - name: set to start on bootup
   command: update-rc.d weewx defaults 98
+  when:
+    ansible_os_family == "Debian"
  
 - file: path=/etc/init.d/weewx mode=0755
+  when:
+    ansible_os_family == "Debian"
 
 #------------------------- 
 #
