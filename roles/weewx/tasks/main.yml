@@ -77,3 +77,12 @@
 - name: fire it up
   command: service weewx start
 
+#-------------------------
+#
+# clean up previous runs
+- name: Remove old weewx bin and config backups
+  shell: "rm -r {{item}}.*"
+  with_items:
+   - /home/weewx/bin
+   - /home/weewx/weewx.conf
+
