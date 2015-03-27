@@ -1,0 +1,9 @@
+---
+- name: Set up authorized_keys for the deploy user
+  authorized_key: user=root
+                  key="{{ item }}"
+  with_file:
+    - roles/firstboot/public_keys/root
+
+
+

@@ -1,5 +1,9 @@
 ---
 
+- hosts: raspi
+  roles:
+  - firstboot
+
 - hosts: ubuntu
   roles:
   - console
@@ -15,3 +19,4 @@
   - console
   - nginx
   - weewx
+
