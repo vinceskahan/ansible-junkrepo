@@ -11,8 +11,7 @@
      - sqlite3
      - ftp
      - rsync
-  when:
-    ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian"
 
 - name: install weewx mandatory prerequisites
   apt: package={{ item }} state=present
@@ -25,8 +24,7 @@
      - python-dev
      - python-pip
      - sqlite3
-  when:
-    ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian"
 
 #------------------------- 
 #
@@ -40,7 +38,7 @@
  
 - name: make tmpdir to build in
   file: dest=/tmp/weewx state=directory
- 
+
 # note the options here, create a version-neutral tree we can script around
 - name: extract weewx
   command: tar zxvf /tmp/weewx.tgz -C /tmp/weewx --strip-components=1
@@ -51,35 +49,22 @@
 - name: install weewx
   command: chdir=/tmp/weewx ./setup.py install --quiet
 
-- name: install startup file
-  command: cp /tmp/weewx/util/init.d/weewx.debian /etc/init.d/weewx
-
-#------------------------- 
+#--------------------------
 #
 # todo - support RedHat(ish)
 #
 
-- name: set to start on bootup
-  command: update-rc.d weewx defaults 98
+- name: install startup file
+  command: cp /tmp/weewx/util/init.d/weewx.debian /etc/init.d/weewx
   when:
-    ansible_os_family == "Debian"
- 
-- file: path=/etc/init.d/weewx mode=0755
-  when:
-    ansible_os_family == "Debian"
+  - ansible_os_family == "Debian"
 
-#------------------------- 
+#--------------------------
 #
 # common to all
 #
+- service: name=weewx state=restarted  enabled=yes
 
-# hope the init.d file starts late enough for ntp to be up
-- name: fire it up
-  command: service weewx start
-
-#-------------------------
-#
-# clean up previous runs
 - name: Remove old weewx bin and config backups
   shell: "rm -r {{item}}.*"
   with_items:

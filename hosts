@@ -9,4 +9,4 @@
 192.168.0.159
 
 [raspi]
-r
+r ansible_ssh_user=root
