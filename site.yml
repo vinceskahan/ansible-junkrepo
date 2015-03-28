@@ -14,7 +14,7 @@
 
 - hosts: weewx
   roles:
-  #- firstboot
+  - firstboot
   - apt
   - common
   - console
