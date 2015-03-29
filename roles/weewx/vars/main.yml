@@ -1,2 +1,2 @@
 ---
-install_weewx: false
+install_weewx: true    # true runs full (re)installation flow

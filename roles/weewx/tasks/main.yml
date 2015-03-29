@@ -30,10 +30,12 @@
 #
 # common to all
 #
-# todo - do not do this if already done unless a flag is set saying reinstall
-
-- name: check if weewx is installed already
-  stat: path=/home/weewx
+# we install only if a 'install_weewx' variable is set to true
+# this is done to speedup reruns
+#
+# TODO - this probably isn't the best way to do this,
+#          what if something underlying actual changed ?
+#
 
 - get_url:
       url="http://sourceforge.net/projects/weewx/files/latest/download?source=files"
