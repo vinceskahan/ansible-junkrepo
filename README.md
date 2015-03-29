@@ -12,7 +12,7 @@ To run:
  - run "ansible-playbook -i hosts site.yml"
 
 To force reinstallation:
- ansible-playbook site.yml -i hosts --limit=weewx --extra-vars 'install_weewx=true'
+ - ansible-playbook site.yml -i hosts --limit=weewx --extra-vars 'install_weewx=true'
 
 Notes:
  - nginx will listen on port 80
