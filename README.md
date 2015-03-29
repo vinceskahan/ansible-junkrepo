@@ -11,6 +11,9 @@ To run:
  - edit the hosts file to fit your remote ip address
  - run "ansible-playbook -i hosts site.yml"
 
+To force reinstallation:
+ ansible-playbook site.yml -i hosts --limit=weewx --extra-vars 'install_weewx=true'
+
 Notes:
  - nginx will listen on port 80
  - it takes 5 minutes for weewx to initially provision public_html

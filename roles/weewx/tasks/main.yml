@@ -34,29 +34,28 @@
 
 - name: check if weewx is installed already
   stat: path=/home/weewx
-  register: s
 
 - get_url:
       url="http://sourceforge.net/projects/weewx/files/latest/download?source=files"
       dest="/tmp/weewx.tgz"
-  when: not s.stat.exists
- 
+  when: "{{ install_weewx }}"
+
 - name: make tmpdir to build in
   file: dest=/tmp/weewx state=directory
-  when: not s.stat.exists
+  when: "{{ install_weewx }}"
 
 # note the options here, create a version-neutral tree we can script around
 - name: extract weewx
   command: tar zxvf /tmp/weewx.tgz -C /tmp/weewx --strip-components=1
-  when: not s.stat.exists
+  when: "{{ install_weewx }}"
  
 - name: build weewx
   command: chdir=/tmp/weewx ./setup.py build 
-  when: not s.stat.exists
+  when: "{{ install_weewx }}"
  
 - name: install weewx
   command: chdir=/tmp/weewx ./setup.py install --quiet
-  when: not s.stat.exists
+  when: "{{ install_weewx }}"
 
 #--------------------------
 #
@@ -67,19 +66,19 @@
   command: cp /tmp/weewx/util/init.d/weewx.debian /etc/init.d/weewx
   when:
   - ansible_os_family == "Debian"
-  - not s.stat.exists
+  - "{{ install_weewx }}"
 
 #--------------------------
 #
 # common to all
 #
 - service: name=weewx state=restarted  enabled=yes
-  when: not s.stat.exists
+  when: "{{ install_weewx }}"
 
 - name: Remove old weewx bin and config backups
   shell: 'rm -rf {{item}}.*'
   with_items:
    - /home/weewx/bin
    - /home/weewx/weewx.conf
-  when: not s.stat.exists
+  when: "{{ install_weewx }}"
 

@@ -8,6 +8,6 @@
 
 - name: install config file
   template: src=default.conf dest=/etc/nginx/sites-enabled/default
-  notify: enable nginx
   notify: restart nginx
+
 
