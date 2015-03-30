@@ -59,6 +59,20 @@
   command: chdir=/tmp/weewx ./setup.py install --quiet
   when: "{{ install_weewx }}"
 
+#
+# unfortunately weewx.conf is not really in .ini format
+# so trying it this way blows up at runtime, but it does provide
+# a good example of how to use with_items and multiple items per substitution
+#
+# - name: edit weewx.conf
+#   ini_file: dest=/home/weewx/weewx.conf section="{{item.section}}" option="{{item.option}}" value="{{item.value}}"
+#   with_items:
+#     - { section: 'Station', option: 'location',    value: 'Federal Way, Washington'      }
+#     - { section: 'Station', option: 'latitude',    value: 47.31                          }
+#     - { section: 'Station', option: 'longitude',   value: -122.123                       }
+#     - { section: 'Station', option: 'altitude',    value: '365, foot'                    }
+#     - { section: 'Station', option: 'station_url', value: "http://www.skahan.net/weewx"  }
+
 #--------------------------
 #
 # todo - support RedHat(ish)
