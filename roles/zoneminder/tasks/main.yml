@@ -1,0 +1,47 @@
+---
+- name: mysql | set debconf values
+  debconf: name='mysql-server-5.5' question={{ item.question}} value={{ item.value }} vtype={{ item.vtype }}
+  with_items:
+     - { question: 'mysql-server/root_password',       value: 'root', vtype: 'password' }
+     - { question: 'mysql-server/root_password_again', value: 'root', vtype: 'password' }
+
+- name: Install Mysql
+  apt: pkg=mysql-server state=latest
+
+- name: install zoneminder
+  apt: package={{ item }} state=present
+  with_items:
+     - zoneminder
+  when:
+     ansible_os_family == "Debian"
+
+#----
+- name: check for previous database dumpfile
+  stat: path=/tmp/zm.dump
+  register: dumpfile
+  
+- name: copy db dump into place
+  copy: src=zm.dump.gz dest=/tmp
+  when: dumpfile.stat.exists == False
+  register: zipped_dumpfile
+
+- name: unzip db dump
+  command: gunzip -f /tmp/zm.dump.gz 
+  when: zipped_dumpfile.changed == True
+  register: dumpfile_unzipped
+
+- name: restore configured database
+  shell: mysql -uroot -proot zm < /tmp/zm.dump
+  when: dumpfile_unzipped.changed == True
+  notify: restart zoneminder
+
+
+#----
+- stat: path=/etc/apache2/sites-enabled/001-zm
+  register: apache_zm_site
+
+- name: symlink zoneminder into web
+  file: src=/etc/zm/apache.conf dest=/etc/apache2/sites-enabled/001-zm state=link
+  when: apache_zm_site.stat.exists == False
+  notify: restart apache
+

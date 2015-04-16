@@ -10,3 +10,6 @@
 
 [raspi]
 r ansible_ssh_user=root
+
+[zm2]
+192.168.0.179 hostname=zm2

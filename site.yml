@@ -20,3 +20,10 @@
   - console
   - nginx
   - weewx
+
+- hosts: zm2
+  roles:
+  - apt
+  - common
+  - console
+  - zoneminder
